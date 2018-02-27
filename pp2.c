@@ -1,91 +1,102 @@
-#include"stdio.h"
-#include"math.h"
-double fig_ml_hr(double hr)
+#include <stdio.h>
+#include <math.h>
+double fig_drops_min(double rate, double drop_factor)
 {
-	return ceil((1/hr)*1000);
+	return ceil((rate * drop_factor) / 60); 
 }
-double by_units(double *cc)
+
+double by_weight(double rate, double weight, double concentration)
 {
-	double hr;
-	printf("Enter number of hours=>\n");
-	scanf("%lf",&hr);
-	*cc=fig_ml_hr(hr);
+	return ceil(rate * weight * (1 / concentration));
 }
-double by_weight(double rt,double con)
+
+double by_units(double rate, double concentration)
 {
-	return ceil(rt*(1/con));
+	return ceil(rate / concentration);
 }
-double fig_drops_min(double rate,double factor)
+
+double fig_ml_hr(double no_hrs)
 {
-	return ceil((rate*factor)/60);
+	return ceil((1.0 / no_hrs) * 1000);
 }
-double get_units_conc(double *mil)
-{
-	double rt2,con2;
-	printf("Enter rate in units/hr=>\n");
-	scanf("%lf",&rt2);
-	printf("Enter concentration in units/ml=>\n");
-	scanf("%lf",&con2);
-	*mil=ceil(rt2/con2);
-}
-double get_kg_rate_conc(double *wt)
-{
-	double rt,weight,con;
-	printf("Enter rate in mg/kg/hr=>\n");
-	scanf("%lf",&rt);
-	printf("Enter patient weight in kg=>\n");
-	scanf("%lf",&weight);
-	printf("Enter concentration in mg/ml=>\n");
-	scanf("%lf",&con);
-	*wt=by_weight(rt,con);
-}
-double get_rate_drop_factor(double *drop)
-{
-	double rate,factor;
-	printf("Enter rate in ml/hr=>\n");
-	scanf("%lf",&rate);
-	printf("Enter tubing's drop factor(drops/ml)=>\n");
-	scanf("%lf",&factor);
-	*drop=fig_drops_min(rate,factor);
-}
-double get_problem()
-{
-	
-		printf("Enter the number of the problem you wish to solve\n",' ');
-		printf("GIVEN A MEDICAL ORDER IN %5c CALCULATE RATE IN\n",' ');
-		printf("(1) ml/hr & tubing drop factor %5c drops / min\n",' ');
-		printf("(2) 1 L for n hr %5c ml / hr\n",' ');
-		printf("(3) mg/kg/hr & concentration in mg/ml %5c ml / hr\n",' ');
-		printf("(4) units/hr & concentration in units/ml %5c ml / h\n",' ');
-		printf("(5) QUIT\n");	
-}
-main()
+
+int get_problem()
 {
 	int ch;
-	printf("INTRAVENOUS RATE ASSISTANT\n");	
-	while((ch=get_problem())!=5)
+	printf("\n\nEnter the number of the problem you wish to solve.");
+	printf("\nGIVEN A MEDICAL ORDER IN %5c CALCULATE RATE IN", ' ');
+	printf("\n(1) ml/hr & tubing drop factor %5c drops / min", ' ');
+	printf("\n(2) 1 L for n hr %5c ml / hr", ' ');
+	printf("\n(3) mg/kg/hr & concentration in mg/ml	%5c ml / hr", ' ');
+	printf("\n(4) units/hr & concentration in units/ml %5c	ml / hr", ' ');
+	printf("\n(5) QUIT");
+	printf("\n\nProblem>");
+	scanf("%d", &ch);
+	return ch;
+}
+
+void get_rate_drop_factor(double *drop_rate)
+{
+	double rate, drop_factor;
+	printf("\nEnter rate in ml/hr=>");
+	scanf("%lf", &rate);
+	printf("\nEnter tubing's drop factor(drops/ml)=>");
+	scanf("%lf", &drop_factor);
+	*drop_rate = fig_drops_min(rate, drop_factor);
+}
+
+void get_kg_rate_conc(double *rate)
+{
+	double rate_in_mg, weight, concentration;
+	printf("\nEnter rate in mg/kg/hr=>");
+	scanf("%lf", &rate_in_mg);
+	printf("\nEnter patient weight in kg=>");
+	scanf("%lf", &weight);
+	printf("\nEnter concentration in mg/ml=>");
+	scanf("%lf", &concentration);
+	*rate = by_weight(rate_in_mg, weight, concentration);
+}
+
+void get_units_conc(double *rate)
+{
+	double rate_in_hr, concentration;
+	printf("\nEnter rate in units/hr=>");
+	scanf("%lf", &rate_in_hr);
+	printf("\nEnter concentration in units/ml=>");
+	scanf("%lf", &concentration);
+	*rate = by_units(rate_in_hr, concentration);
+}
+
+void main()
+{
+	int choice;
+	printf("\nINTRAVENOUS RATE ASSISTANT");
+	while((choice = get_problem()) != 5)
 	{
 		double rate;
-		if(ch==1)
+		if(choice == 1)
 		{
-			get_rate_factor(&rate);
-			printf("the drop per minute %f\n",rate);
+			get_rate_drop_factor(&rate);
+			printf("\nThe drop rate per minute is %.2f", rate);
 		}
-		else if(ch==2)
+		else if(choice == 2)
 		{
-			by_units(&rate);
-			printf("the rate milliliters per hour %f\n",rate);
+			double no_hrs;
+			printf("\nEnter number of hours=>");
+			scanf("%lf", &no_hrs);
+			rate = fig_ml_hr(no_hrs);
+			printf("\nThe rate in milliliters per hour is %.2f", rate);
 		}
-		else if(ch==3)
+		else if(choice == 3)
 		{
 			get_kg_rate_conc(&rate);
-			printf("The rate in milliliters per hour %f\n",rate);
+			printf("\nThe rate in milliliters per hour is %.2f", rate);
 		}
-		else if(ch==4)
-		{		
+		else if(choice == 4)
+		{
 			get_units_conc(&rate);
-			printf("The rate in milliliters per hour %f\n",rate);
+			printf("\nThe rate in milliliters per hour is %.2f", rate);
 		}
 	}
-
+	printf("\n");
 }
