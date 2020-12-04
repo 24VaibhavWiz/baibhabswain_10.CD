@@ -1,5 +1,5 @@
 package assin_5;
-import java.util.Scanner;
+import java.util.*;
 class Node
 {
 	protected int regd_no;
