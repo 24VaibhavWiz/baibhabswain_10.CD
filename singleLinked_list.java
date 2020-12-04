@@ -1,5 +1,5 @@
 package assin_4;
-import java.util.Scanner;
+import java.util.*;
 class node
 {
 	int info;
