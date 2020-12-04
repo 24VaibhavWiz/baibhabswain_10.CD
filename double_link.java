@@ -1,179 +1,210 @@
-package assin_5;
-import java.util.*;
-class Node
-{
-	protected int regd_no;
-	protected float marks;
-	protected Node next;
-	protected Node prev;
-}
-public class double_link {
-	public static Node create(Node start)
-	{
-		Scanner sc=new Scanner (System.in);
-		Node p = new Node ();
-		System.out.println("please input regd.no and marks");
-	    p.regd_no=sc.nextInt();
-	    p.marks=sc.nextFloat();
-	    p.next=p.prev= null;
-	    start=p;
-	    System.out.println("do u want to input more (1 or 0)");
-	    int opt = sc.nextInt();
-	    while(opt==1)
-	    {
-	    	Node q= new Node ();
-	    	System.out.println("please input regd_no. and marks");
-	    	q.regd_no=sc.nextInt();
-	    	q.marks=sc.nextFloat();
-	    	q.next=q.prev=null;
-	    	p.next=q;
-	    	q.prev=p;
-	    	System.out.println("do u want to input more (1 or 0)");
-	    	opt=sc.nextInt();
-	    }
-	    return start;
-	    }
-	public static void display(Node start)
-	{  Node p;
-		
-		if(start==null){
-			System.out.println("empty linked list");
-		}
-		else{
-		    p=start;
-		while(p!=null)
-		{
-			System.out.println(p.prev+" "+p.regd_no+" "+p.marks+" "+p.next);
-			p=p.next;
-		}
-		   }
-	}
-	public static Node ins_Beg(Node start,Node end)
-	{
-		Node p=new Node();
-		Scanner sc=new Scanner(System.in);
-		System.out.println("please input regd_no. and marks");
-		p.regd_no=sc.nextInt();
-		p.marks=sc.nextFloat();
-		p.next=p.prev=null;
-		if(start==null)
-		{
-			start=end=p;
-		}
-		else
-		{
-			p.next=start;
-			start.prev=p;
-			p.prev=null;
-			start=p;
-		}
-		return start;
-	}
-	public static Node ins_End(Node start,Node end)
-	{
-		Node p=new Node();
-		Scanner sc=new Scanner(System.in);
-		System.out.println("please input regd_no. and marks");
-		p.regd_no=sc.nextInt();
-		p.marks=sc.nextFloat();
-		p.next=p.prev=null;
-		if(start==null)
-		{
-			start=end=p;
-		}
-		else
-		{   
-			
-		    end.next=p;
-		    p.prev=end;
-			p.next=null;
-			end=p;
-		}
-		return start;
-	}
-    public static Node ins_Any(Node start,Node end)
-    {   Node p=new Node();
-    	Scanner sc=new Scanner (System.in);
-    	System.out.println("please input location");
-    	int c=count(start);
-    	int loc=sc.nextInt();
-    	if(start!=null)
-    	if(loc>=1&&loc<=c+1)
-    	{    	  
-    		Node q=start;
-    		System.out.println("please input regd.no and marks");
-            p.regd_no=sc.nextInt();
-            p.marks=sc.nextFloat();
-            if(loc==1)
-            {
-            	p.next=start;
-    			start.prev=p;
-    			p.prev=null;
-    			start=p;
-    		}
-            else
-            {   
-            	p.next=q.next;
-            	q.next.prev=p;
-            	q.next=p;
-            	p.prev=p;
-            }
-    	}
-    	else
-    	{
-    		start=end=p;
-    	}
-    	return start;
-    }
-	private static int count(Node start) {
-		Node p=start;
-		int count=0;
-		while(p!=null)
-		{
-			count++;
-			p=p.next;
-		}
-		return 0;
-	}
-	public static void main(String[]args)
-	{
-		Scanner sc=new Scanner(System.in);
-		int choice;
-		Node start = null;
-			while(true)
-			{
-			System.out.println("Linked_List options");	
-			System.out.println("Please choose one");
-			System.out.println("0:-Exit");
-			System.out.println("1:-Create");
-			System.out.println("2:-Display");
-			System.out.println("3:-Inser at beginning");
-			System.out.println("4:-Inser at end");
-			System.out.println("5-Inser at any position");
-			choice=sc.nextInt();
-			switch(choice)
-			{
-			case 0:
-				System.exit(0);
-			case 1:
-				start=create(start);
-				break;
-			case 2:
-				display(start);
-				break;
-			case 3:
-				start=ins_Beg(start, null);
-				break;
-			case 4:
-				start=ins_End(start, null);
-				break;
-			case 5:
-				start=ins_Any(start, null);
-				break;
-			default:
-				System.out.println("Wrong choice");
-	}
-	}
-		}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+class IntDLLNode {
+	public int info;
+	public IntDLLNode next, prev;
+
+	public IntDLLNode(int i) {
+		this(i, null, null);
 	}
 
+	public IntDLLNode(int i, IntDLLNode n, IntDLLNode p) {
+		info = i;
+		next = n;
+		prev = p;
+	}
+}
+
+class IntDLList {
+	protected IntDLLNode head, tail;
+
+	public IntDLList() {
+		head = tail = null;
+	}
+
+	public boolean isEmpty() {
+		return head == null;
+	}
+
+	public void addToHead(int el) {
+		if (!isEmpty()) {
+			head = new IntDLLNode(el, head, null);
+			head.next.prev = head;
+		} else
+			head = tail = new IntDLLNode(el);
+	}
+
+	public void addToTail(int el) {
+		if (!isEmpty()) {
+			tail = new IntDLLNode(el, null, tail);
+			tail.prev.next = tail;
+		} else
+			head = tail = new IntDLLNode(el);
+	}
+
+	public boolean isInList(int el) {
+		IntDLLNode temp;
+		for (temp = head; temp != null && temp.info != el; temp = temp.next)
+			;
+		return temp != null;
+	}
+
+	public void printAll() {
+		for (IntDLLNode temp = head; temp != null; temp = temp.next)
+			System.out.print(temp.info + " ");
+		System.out.println();
+	}
+
+	public int deleteFromHead() {
+		int el = head.info;
+		if (head == tail)
+			head = tail = null;
+		else {
+			head = head.next;
+			head.prev = null;
+		}
+		return el;
+	}
+
+	public int deleteFromTail() {
+		int el = tail.info;
+		if (head == tail)
+			head = tail = null;
+		else {
+			tail = tail.prev;
+			tail.next = null;
+		}
+		return el;
+	}
+
+	public boolean delete(int el) {
+		if (head == tail && el == head.info) {
+			head = tail = null;
+			return true;
+		} else if (el == head.info) {
+			head = head.next;
+			head.prev = null;
+			return true;
+		} else {
+			IntDLLNode pred, temp;
+			for (pred = head, temp = head.next; temp != null && temp.info != el; pred = pred.next, temp = temp.next)
+				;
+			if (temp != null) {
+				pred.next = temp.next;
+				if (temp.next == null)
+					;
+				else
+					temp.next.prev = pred;
+				if (temp == tail)
+					tail = pred;
+				return true;
+			}
+		}
+		return false;
+	}
+
+}
+
+public class DoublyLinkedList {
+	public static void main(String args[]) throws IOException {
+		IntDLList list = new IntDLList();
+
+		int choice;
+		int el;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		do {
+			System.out.println("Enter your choice:");
+			System.out
+					.println("1.ADD \t2.DELETE \t3.PRINT ALL \t4.SEARCH \t5.EXIT");
+			choice = Integer.parseInt(br.readLine());
+			switch (choice) {
+			case 1:
+				System.out.println("\t\tEnter your choice:");
+				System.out.println("\t\t1.ADD TO HEAD \t2.ADD TO TAIL");
+				System.out.print("\t\t");
+				choice = Integer.parseInt(br.readLine());
+				switch (choice) {
+				case 1:
+
+					System.out.println("\t\tEnter an element");
+					System.out.print("\t\t");
+					el = Integer.parseInt(br.readLine());
+					list.addToHead(el);
+					break;
+				case 2:
+					System.out.println("\t\tEnter an element");
+					System.out.print("\t\t");
+					el = Integer.parseInt(br.readLine());
+					list.addToTail(el);
+					break;
+				default:
+					System.out
+							.println("\t\tInvalid argument,return to main menu");
+					break;
+				}
+				break;
+			case 2:
+				if (list.isEmpty())
+					System.out.println("\t\tList is empty");
+				else {
+					System.out.println("\t\tEnter your choice:");
+					System.out
+							.println("\t\t1.DELETE FROM HEAD \t2.DELETE FROM TAIL \t3.DELETE A PARTICULAR ELEMENT");
+					System.out.print("\t\t");
+					choice = Integer.parseInt(br.readLine());
+					switch (choice) {
+					case 1:
+						el = list.deleteFromHead();
+						System.out.println("\t\tElement deleted is:" + el);
+						break;
+					case 2:
+						el = list.deleteFromTail();
+						System.out.println("\t\tElement deleted is:" + el);
+						break;
+					case 3:
+						System.out.println("\t\tEnter an element");
+						System.out.print("\t\t");
+						el = Integer.parseInt(br.readLine());
+						if (list.delete(el))
+							System.out.println("\t\tElement is deleted");
+						else
+							System.out.println("\t\tNot found");
+						break;
+					default:
+						System.out
+								.println("\t\tInvalid argument,return to main menu");
+						break;
+					}
+				}
+				break;
+			case 3:
+				if (list.isEmpty())
+					System.out.println("\t\tList is empty");
+				else {
+					System.out.println("\t\tElements in the list are:");
+					System.out.print("\t\t");
+					list.printAll();
+				}
+				break;
+			case 4:
+				if (list.isEmpty())
+					System.out.println("\t\tList is empty");
+				else {
+					System.out.println("\t\tEnter your choice:");
+					System.out.print("\t\t");
+					el = Integer.parseInt(br.readLine());
+					if (list.isInList(el))
+						System.out.println("\t\tElement is present");
+					else
+						System.out.println("\t\tElement is not present");
+				}
+				break;
+			case 5:
+				break;
+			}
+		} while (choice != 5);
+	}
+}
